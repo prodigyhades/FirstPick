@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart Task Analyzer</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Smart Task Analyzer</h1>
+        </header>
+        
+        <main class="main-layout">
+            <!-- Left Panel: Input -->
+            <section class="panel input-panel">
+                <h2>Task Input</h2>
+                <div class="form-group">
+                    <label for="strategy-select">Prioritization Strategy:</label>
+                    <select id="strategy-select">
+                        <option value="smart_balance">Smart Balance</option>
+                        <option value="fastest_wins">Fastest Wins</option>
+                        <option value="deadline_driven">Deadline Driven</option>
+                        <option value="high_impact">High Impact</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="task-input">Tasks (JSON Format):</label>
+                    <textarea id="task-input" placeholder='[
+    {
+        "id": 1,
+        "title": "Complete Project Proposal",
+        "due_date": "2023-12-01",
+        "importance": 8,
+        "estimated_hours": 4,
+        "dependencies": []
+    }
+]'></textarea>
+                </div>
+                
+                <button id="analyze-btn" onclick="analyzeTasks()">Analyze Tasks</button>
+                <div id="error-message" class="error"></div>
+            </section>
+            
+            <!-- Right Panel: Results -->
+            <section class="panel results-panel">
+                <h2>Prioritized Results</h2>
+                <div id="results-container" class="results-grid">
+                    <!-- Task cards will be rendered here -->
+                    <div class="placeholder-text">Enter tasks and click Analyze to see results.</div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
