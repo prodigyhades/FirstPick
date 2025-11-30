@@ -11,7 +11,8 @@ class AnalyzeTasksView(View):
         try:
             data = json.loads(request.body)
             tasks = data.get('tasks', [])
-            strategy = data.get('strategy', 'smart_balance')
+            strategy = request.GET.get('strategy', 'smart_balance')
+            print(f"Analyzing with Strategy: {strategy}")
             
             if not isinstance(tasks, list):
                 return JsonResponse({'error': 'Tasks must be a list'}, status=400)

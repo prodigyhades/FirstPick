@@ -24,7 +24,11 @@ def calculate_score(task, all_tasks, strategy='smart_balance'):
         if days_until_due < 0:
             # Overdue: 1.0 + (days_overdue * 0.05) [Cap at 2.0]
             days_overdue = abs(days_until_due)
-            norm_urgency = min(2.0, 1.0 + (days_overdue * 0.05))
+            if strategy in ['fastest_wins', 'high_impact']:
+                # Reduced bonus for these strategies to let other factors win
+                norm_urgency = min(1.1, 1.0 + (days_overdue * 0.01))
+            else:
+                norm_urgency = min(2.0, 1.0 + (days_overdue * 0.05))
         elif days_until_due <= 2:
             # Due within 0-2 days
             norm_urgency = 1.0

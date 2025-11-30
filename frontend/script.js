@@ -156,15 +156,15 @@ async function analyzeTasks() {
         }
 
         const strategy = strategyElement.value;
+        const url = `http://127.0.0.1:8000/api/tasks/analyze/?strategy=${strategy}`;
 
-        const response = await fetch('http://127.0.0.1:8000/api/tasks/analyze/', {
+        const response = await fetch(url, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify({
-                tasks: tasks,
-                strategy: strategy
+                tasks: tasks
             })
         });
 
