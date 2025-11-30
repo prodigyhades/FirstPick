@@ -187,7 +187,7 @@ function renderResults(tasks) {
     resultsContainer.innerHTML = '';
 
     if (tasks.length === 0) {
-        resultsContainer.innerHTML = '<div class="placeholder-text">No tasks returned.</div>';
+        resultsContainer.innerHTML = '<div class="placeholder-text">All caught up! Add a task to get started.</div>';
         return;
     }
 
@@ -311,6 +311,19 @@ function escapeHtml(text) {
         .replace(/>/g, "&gt;")
         .replace(/"/g, "&quot;")
         .replace(/'/g, "&#039;");
+}
+
+function toggleJsonVisibility() {
+    const container = document.getElementById('json-container');
+    const btn = document.getElementById('toggle-json-btn');
+
+    if (container.classList.contains('hidden')) {
+        container.classList.remove('hidden');
+        btn.textContent = "Hide Advanced JSON Data";
+    } else {
+        container.classList.add('hidden');
+        btn.textContent = "Show Advanced JSON Data";
+    }
 }
 
 // --- Heatmap / Calendar Logic ---

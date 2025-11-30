@@ -35,7 +35,18 @@
             <section class="panel input-panel">
                 <h2>Task Input</h2>
                 <div class="form-group">
-                    <label for="strategy-select">Prioritization Strategy:</label>
+                    <div class="label-with-tooltip">
+                        <label for="strategy-select">Prioritization Strategy:</label>
+                        <div class="tooltip">
+                            <span class="info-icon">ⓘ</span>
+                            <div class="tooltip-text">
+                                <strong>Smart Balance:</strong> Balanced mix of urgency & importance.<br>
+                                <strong>Fastest Wins:</strong> Prioritizes short tasks (<2 hrs).<br>
+                                <strong>Deadline Driven:</strong> Focuses purely on due dates.<br>
+                                <strong>High Impact:</strong> Focuses purely on Importance (8-10).
+                            </div>
+                        </div>
+                    </div>
                     <select id="strategy-select">
                         <option value="smart_balance">Smart Balance</option>
                         <option value="fastest_wins">Fastest Wins</option>
@@ -56,15 +67,20 @@
                     
                     <div class="input-row">
                         <input type="number" id="new-task-hours" min="0" placeholder="Est. Hours" class="half-width-input">
-                        <input type="text" id="new-task-deps" placeholder="Dependencies (e.g. 1, 2)" class="half-width-input">
+                        <div class="half-width-input">
+                            <input type="text" id="new-task-deps" placeholder="Dependencies (e.g. 1, 2)" style="width: 100%;">
+                            <small class="helper-text">Enter the ID of the task blocking this one (e.g., if Task 1 blocks this, type '1').</small>
+                        </div>
                     </div>
                     
                     <button onclick="addTask()" class="btn-add-task">Add Task</button>
                 </div>
 
                 <div class="form-group">
-                    <label for="task-input">Tasks (JSON Format):</label>
-                    <textarea id="task-input" placeholder='[
+                    <button id="toggle-json-btn" class="btn-text" onclick="toggleJsonVisibility()">Show Advanced JSON Data</button>
+                    <div id="json-container" class="hidden">
+                        <label for="task-input">Tasks (JSON Format):</label>
+                        <textarea id="task-input" placeholder='[
     {
         "id": 1,
         "title": "Complete Project Proposal",
@@ -74,6 +90,7 @@
         "dependencies": []
     }
 ]'></textarea>
+                    </div>
                 </div>
                 
                 <button id="analyze-btn" onclick="analyzeTasks()">Analyze Tasks</button>
@@ -85,7 +102,7 @@
                 <h2>Prioritized Results</h2>
                 <div id="results-container" class="results-grid">
                     <!-- Task cards will be rendered here -->
-                    <div class="placeholder-text">Enter tasks and click Analyze to see results.</div>
+                    <div class="placeholder-text">All caught up! Add a task to get started.</div>
                 </div>
             </section>
         </main>

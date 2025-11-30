@@ -240,15 +240,6 @@ button:hover {
     margin-bottom: 15px;
 }
 
-.btn-add-task:hover {
-    background-color: #059669;
-}
-
-#analyze-btn {
-    background-color: #2563eb; /* Blue color */
-    margin-top: 10px;
-}
-
 #analyze-btn:hover {
     background-color: #1d4ed8;
 }
@@ -435,4 +426,96 @@ button:hover {
     height: 8px;
     background: linear-gradient(to right, rgba(220, 53, 69, 0.1), rgba(220, 53, 69, 1));
     border-radius: 4px;
+}
+
+/* Tooltip Styles */
+.label-with-tooltip {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 5px;
+}
+
+.label-with-tooltip label {
+    margin-bottom: 0;
+}
+
+.tooltip {
+    position: relative;
+    display: inline-block;
+    cursor: help;
+}
+
+.info-icon {
+    font-size: 14px;
+    color: var(--primary-color);
+}
+
+.tooltip .tooltip-text {
+    visibility: hidden;
+    width: 250px;
+    background-color: #333;
+    color: #fff;
+    text-align: left;
+    border-radius: 6px;
+    padding: 10px;
+    position: absolute;
+    z-index: 100;
+    top: 125%; /* Position below */
+    left: 50%;
+    margin-left: -125px;
+    opacity: 0;
+    transition: opacity 0.3s;
+    font-size: 12px;
+    font-weight: normal;
+    line-height: 1.4;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+}
+
+.tooltip .tooltip-text::after {
+    content: "";
+    position: absolute;
+    bottom: 100%; /* Arrow at top */
+    left: 50%;
+    margin-left: -5px;
+    border-width: 5px;
+    border-style: solid;
+    border-color: transparent transparent #333 transparent;
+}
+
+.tooltip:hover .tooltip-text {
+    visibility: visible;
+    opacity: 1;
+}
+
+/* Helper Text */
+.helper-text {
+    display: block;
+    font-size: 11px;
+    color: #6b7280;
+    margin-top: 2px;
+    line-height: 1.2;
+}
+
+/* Text Button (Toggle) */
+.btn-text {
+    background: none;
+    border: none;
+    color: var(--primary-color);
+    padding: 0;
+    font-size: 14px;
+    cursor: pointer;
+    text-decoration: underline;
+    width: auto;
+    margin-bottom: 10px;
+    display: inline-block;
+}
+
+.btn-text:hover {
+    background: none;
+    color: var(--primary-hover);
+}
+
+.hidden {
+    display: none;
 }
