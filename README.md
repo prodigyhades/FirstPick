@@ -30,55 +30,73 @@ To prevent "analysis paralysis," the system rewards low-effort tasks to encourag
 
 ---
 
-## 2. Design Decisions & Trade-offs
+## 2. Prioritization Strategies
 
-**Zero-Dependency Frontend**
-* **Decision:** Built using Vanilla JavaScript, HTML5, and CSS3.
-* **Rationale:** Avoided the complexity of a build chain (Webpack/React) for a focused MVP. This ensures the application is lightweight and browser-native.
+The application supports dynamic prioritization strategies that adjust the weights of the heuristics above:
 
-**Weighted Scoring Model**
-* **Decision:** Implemented a multi-factor normalized scoring system rather than a simple SQL `ORDER BY`.
-* **Rationale:** Real-world prioritization is complex. A low-importance task due tomorrow should not necessarily outrank a critical project due in 3 days. The weighted model balances these competing factors.
-
-**Depth-First Search (DFS) for Validation**
-* **Decision:** Used DFS for cycle detection in the dependency graph.
-* **Rationale:** While computationally more expensive than a linear check, it is the only robust mathematical method to guarantee the scoring engine does not enter an infinite recursion loop.
+*   **Smart Balance (Default):** A balanced approach considering all factors (`Urgency: 45%`, `Importance: 35%`, `Effort: 10%`, `Dependency: 10%`).
+*   **Fastest Wins:** Prioritizes low-effort tasks to quickly clear the backlog (`Effort: 70%`).
+*   **Deadline Driven:** Heavily favors upcoming due dates (`Urgency: 80%`).
+*   **High Impact:** Focuses on the most important tasks regardless of effort (`Importance: 80%`).
 
 ---
 
-## 3. Time Breakdown
+## 3. API Endpoints
+
+The backend exposes the following RESTful endpoints:
+
+| Method | Endpoint | Description |
+| :--- | :--- | :--- |
+| **POST** | `/api/tasks/analyze/?strategy=<strategy_name>` | Accepts a list of tasks, saves them, and returns them sorted by priority score. |
+| **GET** | `/api/tasks/suggest/?strategy=<strategy_name>` | Returns the top 3 suggested tasks based on the current database state. |
+
+---
+
+## 4. Design Decisions & Trade-offs
+
+**Zero-Dependency Frontend**
+*   **Decision:** Built using Vanilla JavaScript, HTML5, and CSS3.
+*   **Rationale:** Avoided the complexity of a build chain (Webpack/React) for a focused MVP. This ensures the application is lightweight and browser-native.
+*   **Features:** Includes a custom **Workload Heatmap** to visualize task density over the month and a **Dynamic Strategy Selector**.
+
+**Weighted Scoring Model**
+*   **Decision:** Implemented a multi-factor normalized scoring system rather than a simple SQL `ORDER BY`.
+*   **Rationale:** Real-world prioritization is complex. A low-importance task due tomorrow should not necessarily outrank a critical project due in 3 days. The weighted model balances these competing factors.
+
+**Depth-First Search (DFS) for Validation**
+*   **Decision:** Used DFS for cycle detection in the dependency graph.
+*   **Rationale:** While computationally more expensive than a linear check, it is the only robust mathematical method to guarantee the scoring engine does not enter an infinite recursion loop.
+
+---
+
+## 5. Time Breakdown
 
 | Phase | Duration |
 | :--- | :--- |
 | **Backend Architecture** (Models, Views, API) | 1 hr 00 mins |
 | **Algorithm Design** (Scoring Logic & DFS) | 1 hr 15 mins |
-| **Frontend Development** (UI/UX & Integration) | 0 hr 45 mins |
-| **Testing & Documentation** | 0 hr 30 mins |
-| **Total** | **~3.5 Hours** |
+| **Frontend Development** (UI/UX & Integration) | 1 hr 30 mins |
+| **Testing & Documentation** | 0 hr 45 mins |
+| **Total** | **~4.5 Hours** |
 
 ---
 
-## 4. Future Improvements
+## 6. Future Improvements
 
 With more time, the following features would be prioritized:
-* **Authentication:** Multi-user support with private task lists.
-* **Drag-and-Drop Interface:** Visual dependency mapping to link tasks intuitively.
-* **Database Upgrade:** Migration from SQLite to PostgreSQL for production concurrency.
-* **Persistent History:** Analytics tracking how a task's priority score evolves over time.
+*   **Authentication:** Multi-user support with private task lists.
+*   **Drag-and-Drop Interface:** Visual dependency mapping to link tasks intuitively.
+*   **Database Upgrade:** Migration from SQLite to PostgreSQL for production concurrency.
+*   **Persistent History:** Analytics tracking how a task's priority score evolves over time.
 
 ---
 
-## 5. Setup Instructions
+## 7. Setup Instructions
 
 **1. Clone the repository**
 ```bash
 git clone <repository_url>
-cd task-analyzer
-
-**1. Clone the repository**
-```bash
-git clone <repository_url>
-cd task-analyser
+cd Smart_Task_Analyzer
 ```
 
 **2. Create and Activate Virtual Environment**
