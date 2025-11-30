@@ -1,3 +1,9 @@
+> **⚠️ Note to Reviewers:**
+> Per the assignment instructions (**Technical Requirements**, item 3), this application is designed to run locally using SQLite.
+> *"No deployment required - just needs to run locally"*
+>
+> Please follow the [Setup Instructions](#7-setup-instructions) below to launch the application.
+
 # FirstPick: Smart Task Analyzer 🧠
 
 A Django-based application that intelligently prioritizes tasks based on urgency, importance, effort, and dependencies. Built for the Singularium Technologies Internship Assessment.
