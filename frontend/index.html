@@ -3,13 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Smart Task Analyzer</title>
+    <title>FirstPick: A Smart Task Analyzer</title>
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
     <div class="container">
         <header>
-            <h1>Smart Task Analyzer</h1>
+            <h1>FirstPick: A Smart Task Analyzer</h1>
         </header>
         
         <main class="main-layout">
@@ -71,6 +71,43 @@
                 </div>
             </section>
         </main>
+    </div>
+
+    <!-- Edit Task Modal -->
+    <div id="edit-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal">&times;</span>
+            <h2>Edit Task</h2>
+            <input type="hidden" id="edit-task-id">
+            <div class="form-group">
+                <label for="edit-task-title">Task Title</label>
+                <input type="text" id="edit-task-title" class="full-width-input">
+                
+                <div class="input-row">
+                    <div class="slider-group half-width-input">
+                        <label for="edit-task-due">Due Date:</label>
+                        <input type="date" id="edit-task-due" style="width: 100%;">
+                    </div>
+                    <div class="slider-group half-width-input">
+                        <label for="edit-task-importance">Importance: <span id="edit-importance-val">5</span></label>
+                        <input type="range" id="edit-task-importance" min="1" max="10" class="slider">
+                    </div>
+                </div>
+                
+                <div class="input-row">
+                    <div class="slider-group half-width-input">
+                        <label for="edit-task-hours">Est. Hours: <span id="edit-hours-val">1</span></label>
+                        <input type="range" id="edit-task-hours" min="0" max="40" class="slider">
+                    </div>
+                    <div class="slider-group half-width-input">
+                        <label for="edit-task-deps">Dependencies:</label>
+                        <input type="text" id="edit-task-deps" placeholder="e.g. 1, 2" style="width: 100%;">
+                    </div>
+                </div>
+                
+                <button onclick="saveEditTask()" class="btn-add-task">Save Changes</button>
+            </div>
+        </div>
     </div>
 
     <script src="script.js"></script>
