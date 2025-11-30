@@ -27,6 +27,24 @@
                 </div>
                 
                 <div class="form-group">
+                    <h3>Add New Task</h3>
+                    <label for="new-task-title" class="sr-only">Task Title</label>
+                    <input type="text" id="new-task-title" placeholder="Task Title" class="full-width-input">
+                    
+                    <div class="input-row">
+                        <input type="date" id="new-task-due" class="half-width-input" placeholder="dd-mm-yyyy">
+                        <input type="number" id="new-task-importance" min="1" max="10" placeholder="Importance (1-10)" class="half-width-input">
+                    </div>
+                    
+                    <div class="input-row">
+                        <input type="number" id="new-task-hours" min="0" placeholder="Est. Hours" class="half-width-input">
+                        <input type="text" id="new-task-deps" placeholder="Dependencies (e.g. 1, 2)" class="half-width-input">
+                    </div>
+                    
+                    <button onclick="addTask()" class="btn-add-task">Add Task</button>
+                </div>
+
+                <div class="form-group">
                     <label for="task-input">Tasks (JSON Format):</label>
                     <textarea id="task-input" placeholder='[
     {

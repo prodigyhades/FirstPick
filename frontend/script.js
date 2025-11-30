@@ -1,3 +1,70 @@
+let taskList = [];
+
+// Initialize taskList from textarea if present
+document.addEventListener('DOMContentLoaded', () => {
+    const inputElement = document.getElementById('task-input');
+    if (inputElement.value.trim()) {
+        try {
+            taskList = JSON.parse(inputElement.value);
+        } catch (e) {
+            console.error("Failed to parse initial JSON", e);
+        }
+    }
+});
+
+function addTask() {
+    const title = document.getElementById('new-task-title').value;
+    const dueDate = document.getElementById('new-task-due').value;
+    const importanceInput = document.getElementById('new-task-importance').value;
+    const hoursInput = document.getElementById('new-task-hours').value;
+    const depsStr = document.getElementById('new-task-deps').value;
+    const errorMessage = document.getElementById('error-message');
+
+    // Clear error message
+    if (errorMessage) errorMessage.textContent = '';
+
+    if (!title) {
+        alert("Please enter a title");
+        return;
+    }
+
+    const importance = importanceInput ? parseInt(importanceInput) : 5;
+    const hours = hoursInput ? parseFloat(hoursInput) : 1;
+
+    const dependencies = depsStr ? depsStr.split(',')
+        .map(s => parseInt(s.trim()))
+        .filter(n => !isNaN(n)) : [];
+
+    // Sync with current textarea content first
+    const inputElement = document.getElementById('task-input');
+    try {
+        if (inputElement.value.trim()) {
+            taskList = JSON.parse(inputElement.value);
+        }
+    } catch (e) {
+        console.warn("Invalid JSON in textarea, overwriting with current list + new task");
+    }
+
+    // Simple ID generation
+    const newId = taskList.length > 0 ? Math.max(...taskList.map(t => t.id || 0)) + 1 : 1;
+
+    const newTask = {
+        id: newId,
+        title: title,
+        due_date: dueDate || null,
+        importance: importance,
+        estimated_hours: hours,
+        dependencies: dependencies
+    };
+
+    taskList.push(newTask);
+
+    inputElement.value = JSON.stringify(taskList, null, 2);
+
+    // Clear title input for convenience
+    document.getElementById('new-task-title').value = '';
+}
+
 async function analyzeTasks() {
     const inputElement = document.getElementById('task-input');
     const strategyElement = document.getElementById('strategy-select');

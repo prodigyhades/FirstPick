@@ -82,7 +82,7 @@ label {
     font-weight: 600;
 }
 
-select, textarea {
+select, textarea, input[type="text"], input[type="date"], input[type="number"] {
     width: 100%;
     padding: 10px;
     border: 1px solid var(--border-color);
@@ -185,4 +185,58 @@ button:hover {
     text-align: center;
     color: #9ca3af;
     margin-top: 50px;
+}
+
+/* New Styles for Manual Entry Form */
+.input-row {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 10px;
+}
+
+.full-width-input {
+    width: 100%;
+    margin-bottom: 10px;
+}
+
+.half-width-input {
+    width: 50%;
+}
+
+.btn-add-task {
+    background-color: #10b981; /* Green color from design */
+    margin-bottom: 20px;
+}
+
+.btn-add-task:hover {
+    background-color: #059669;
+}
+
+#analyze-btn {
+    background-color: #2563eb; /* Blue color */
+    margin-top: 10px;
+}
+
+#analyze-btn:hover {
+    background-color: #1d4ed8;
+}
+
+.sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border-width: 0;
+}
+
+/* Adjust headings for the form */
+.form-group h3 {
+    font-size: 16px;
+    margin-bottom: 10px;
+    color: var(--text-color);
+    font-weight: 700;
 }
