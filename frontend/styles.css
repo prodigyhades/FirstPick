@@ -35,7 +35,7 @@ body {
 }
 
 .container {
-    max-width: 1400px;
+    max-width: 1600px;
     margin: 0 auto;
     padding: 20px;
     height: 100%;
@@ -56,8 +56,8 @@ h1 {
 
 .main-layout {
     display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
-    gap: 20px;
+    grid-template-columns: 1fr 1.3fr 1fr;
+    gap: 40px;
     flex: 1;
     min-height: 0; 
 }
@@ -349,10 +349,6 @@ button:hover {
     cursor: pointer;
 }
 
-/* Heatmap Styles */
-.heatmap-panel {
-    /* Inherits flex column from .panel */
-}
 
 .calendar-header {
     display: flex;
