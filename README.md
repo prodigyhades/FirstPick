@@ -1,4 +1,4 @@
-# Smart Task Analyzer
+# FirstPick: Smart Task Analyzer 🧠
 
 A Django-based application that intelligently prioritizes tasks based on urgency, importance, effort, and dependencies. Built for the Singularium Technologies Internship Assessment.
 
@@ -30,14 +30,13 @@ To prevent "analysis paralysis," the system rewards low-effort tasks to encourag
 
 ---
 
-## 2. Prioritization Strategies
+## 2. Bonus Challenges Implemented 🏆
 
-The application supports dynamic prioritization strategies that adjust the weights of the heuristics above:
+In addition to the core requirements, the following bonus features were implemented:
 
-*   **Smart Balance (Default):** A balanced approach considering all factors (`Urgency: 45%`, `Importance: 35%`, `Effort: 10%`, `Dependency: 10%`).
-*   **Fastest Wins:** Prioritizes low-effort tasks to quickly clear the backlog (`Effort: 70%`).
-*   **Deadline Driven:** Heavily favors upcoming due dates (`Urgency: 80%`).
-*   **High Impact:** Focuses on the most important tasks regardless of effort (`Importance: 80%`).
+* **Date Intelligence (Workload Heatmap):** A custom-built, 3-column Dashboard featuring a calendar heatmap. It visualizes the density of deadlines per day (darker red = higher workload), allowing users to spot crunch days at a glance.
+* **Unit Tests:** Comprehensive test suite covering scoring logic, circular dependency detection, and overdue handling.
+* **Dynamic Strategies:** Users can toggle between "Fastest Wins", "High Impact", and "Deadline Driven" modes to adjust the algorithm's weighting dynamically.
 
 ---
 
@@ -47,8 +46,8 @@ The backend exposes the following RESTful endpoints:
 
 | Method | Endpoint | Description |
 | :--- | :--- | :--- |
-| **POST** | `/api/tasks/analyze/?strategy=<strategy_name>` | Accepts a list of tasks, saves them, and returns them sorted by priority score. |
-| **GET** | `/api/tasks/suggest/?strategy=<strategy_name>` | Returns the top 3 suggested tasks based on the current database state. |
+| **POST** | `/api/tasks/analyze/?strategy=<strategy>` | Accepts a list of tasks, saves them, and returns them sorted by priority score. |
+| **GET** | `/api/tasks/suggest/?strategy=<strategy>` | Returns the top 3 suggested tasks for *today* based on the current database state. |
 
 ---
 
