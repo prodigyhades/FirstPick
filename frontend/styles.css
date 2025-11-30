@@ -232,7 +232,7 @@ button:hover {
 }
 
 .half-width-input {
-    width: 50%;
+    flex: 1;
 }
 
 .btn-add-task {
