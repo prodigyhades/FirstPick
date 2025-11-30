@@ -148,29 +148,23 @@ async function analyzeTasks() {
         let tasks;
         try {
             tasks = JSON.parse(tasksJson);
+
+            // Ensure all tasks have an ID
+            tasks = tasks.map((t, index) => {
+                if (!t.id) {
+                    return { ...t, id: Date.now() + index };
+                }
+                return t;
+            });
+
             // Update global taskList to match analyzed tasks
             taskList = tasks;
+
+            // Update the input field with the new JSON containing IDs
+            inputElement.value = JSON.stringify(taskList, null, 2);
+
             renderCalendar(); // Update heatmap with latest data
         } catch (e) {
-            throw new Error("Invalid JSON format. Please check your syntax.");
-        }
-
-        const strategy = strategyElement.value;
-        const url = `http://127.0.0.1:8000/api/tasks/analyze/?strategy=${strategy}`;
-
-        const response = await fetch(url, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                tasks: tasks
-            })
-        });
-
-        if (!response.ok) {
-            const errorData = await response.json();
-            throw new Error(errorData.error || `Server Error: ${response.status}`);
         }
 
         const data = await response.json();
