@@ -1,4 +1,4 @@
-# Smart Task Analyzer
+# FirstPick: Smart Task Analyzer 🧠
 
 A Django-based application that intelligently prioritizes tasks based on urgency, importance, effort, and dependencies. Built for the Singularium Technologies Internship Assessment.
 
@@ -30,7 +30,28 @@ To prevent "analysis paralysis," the system rewards low-effort tasks to encourag
 
 ---
 
-## 2. Design Decisions & Trade-offs
+## 2. Bonus Challenges Implemented 🏆
+
+In addition to the core requirements, the following bonus features were implemented:
+
+* **Date Intelligence (Workload Heatmap):** A custom-built, 3-column Dashboard featuring a calendar heatmap. It visualizes the density of deadlines per day (darker red = higher workload), allowing users to spot crunch days at a glance.
+* **Unit Tests:** Comprehensive test suite covering scoring logic, circular dependency detection, and overdue handling.
+* **Dynamic Strategies:** Users can toggle between "Fastest Wins", "High Impact", and "Deadline Driven" modes to adjust the algorithm's weighting dynamically.
+
+---
+
+## 3. API Endpoints
+
+The backend exposes the following RESTful endpoints:
+
+| Method | Endpoint | Description |
+| :--- | :--- | :--- |
+| **POST** | `/api/tasks/analyze/?strategy=<strategy>` | Accepts a list of tasks, saves them, and returns them sorted by priority score. |
+| **GET** | `/api/tasks/suggest/?strategy=<strategy>` | Returns the top 3 suggested tasks for *today* based on the current database state. |
+
+---
+
+## 4. Design Decisions & Trade-offs
 
 **Zero-Dependency Frontend**
 * **Decision:** Built using Vanilla JavaScript, HTML5, and CSS3.
@@ -46,19 +67,19 @@ To prevent "analysis paralysis," the system rewards low-effort tasks to encourag
 
 ---
 
-## 3. Time Breakdown
+## 5. Time Breakdown
 
 | Phase | Duration |
 | :--- | :--- |
 | **Backend Architecture** (Models, Views, API) | 1 hr 00 mins |
 | **Algorithm Design** (Scoring Logic & DFS) | 1 hr 15 mins |
-| **Frontend Development** (UI/UX & Integration) | 0 hr 45 mins |
-| **Testing & Documentation** | 0 hr 30 mins |
-| **Total** | **~3.5 Hours** |
+| **Frontend Development** (UI/UX & Integration) | 1 hr 30 mins |
+| **Testing & Documentation** | 0 hr 45 mins |
+| **Total** | **~4.5 Hours** |
 
 ---
 
-## 4. Future Improvements
+## 6. Future Improvements
 
 With more time, the following features would be prioritized:
 * **Authentication:** Multi-user support with private task lists.
@@ -68,12 +89,7 @@ With more time, the following features would be prioritized:
 
 ---
 
-## 5. Setup Instructions
-
-**1. Clone the repository**
-```bash
-git clone <repository_url>
-cd task-analyzer
+## 7. Setup Instructions
 
 **1. Clone the repository**
 ```bash
