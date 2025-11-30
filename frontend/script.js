@@ -167,6 +167,19 @@ async function analyzeTasks() {
         } catch (e) {
         }
 
+        const strategy = strategyElement ? strategyElement.value : 'smart_balance';
+        const response = await fetch(`http://127.0.0.1:8000/api/tasks/analyze/?strategy=${strategy}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(taskList)
+        });
+
+        if (!response.ok) {
+            throw new Error(`Server error: ${response.status} ${response.statusText}`);
+        }
+
         const data = await response.json();
         renderResults(data.tasks);
 
