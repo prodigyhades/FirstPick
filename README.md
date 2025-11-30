@@ -54,16 +54,17 @@ The backend exposes the following RESTful endpoints:
 ## 4. Design Decisions & Trade-offs
 
 **Zero-Dependency Frontend**
-* **Decision:** Built using Vanilla JavaScript, HTML5, and CSS3.
-* **Rationale:** Avoided the complexity of a build chain (Webpack/React) for a focused MVP. This ensures the application is lightweight and browser-native.
+*   **Decision:** Built using Vanilla JavaScript, HTML5, and CSS3.
+*   **Rationale:** Avoided the complexity of a build chain (Webpack/React) for a focused MVP. This ensures the application is lightweight and browser-native.
+*   **Features:** Includes a custom **Workload Heatmap** to visualize task density over the month and a **Dynamic Strategy Selector**.
 
 **Weighted Scoring Model**
-* **Decision:** Implemented a multi-factor normalized scoring system rather than a simple SQL `ORDER BY`.
-* **Rationale:** Real-world prioritization is complex. A low-importance task due tomorrow should not necessarily outrank a critical project due in 3 days. The weighted model balances these competing factors.
+*   **Decision:** Implemented a multi-factor normalized scoring system rather than a simple SQL `ORDER BY`.
+*   **Rationale:** Real-world prioritization is complex. A low-importance task due tomorrow should not necessarily outrank a critical project due in 3 days. The weighted model balances these competing factors.
 
 **Depth-First Search (DFS) for Validation**
-* **Decision:** Used DFS for cycle detection in the dependency graph.
-* **Rationale:** While computationally more expensive than a linear check, it is the only robust mathematical method to guarantee the scoring engine does not enter an infinite recursion loop.
+*   **Decision:** Used DFS for cycle detection in the dependency graph.
+*   **Rationale:** While computationally more expensive than a linear check, it is the only robust mathematical method to guarantee the scoring engine does not enter an infinite recursion loop.
 
 ---
 
@@ -82,10 +83,10 @@ The backend exposes the following RESTful endpoints:
 ## 6. Future Improvements
 
 With more time, the following features would be prioritized:
-* **Authentication:** Multi-user support with private task lists.
-* **Drag-and-Drop Interface:** Visual dependency mapping to link tasks intuitively.
-* **Database Upgrade:** Migration from SQLite to PostgreSQL for production concurrency.
-* **Persistent History:** Analytics tracking how a task's priority score evolves over time.
+*   **Authentication:** Multi-user support with private task lists.
+*   **Drag-and-Drop Interface:** Visual dependency mapping to link tasks intuitively.
+*   **Database Upgrade:** Migration from SQLite to PostgreSQL for production concurrency.
+*   **Persistent History:** Analytics tracking how a task's priority score evolves over time.
 
 ---
 
@@ -94,7 +95,7 @@ With more time, the following features would be prioritized:
 **1. Clone the repository**
 ```bash
 git clone <repository_url>
-cd task-analyser
+cd Smart_Task_Analyzer
 ```
 
 **2. Create and Activate Virtual Environment**
