@@ -13,7 +13,25 @@
         </header>
         
         <main class="main-layout">
-            <!-- Left Panel: Input -->
+            <!-- Left Panel: Heatmap -->
+            <section class="panel heatmap-panel">
+                <h2>Workload Heatmap</h2>
+                <div class="calendar-header">
+                    <button id="prev-month">&lt;</button>
+                    <span id="current-month-year">December 2025</span>
+                    <button id="next-month">&gt;</button>
+                </div>
+                <div class="calendar-grid" id="calendar-grid">
+                    <!-- Calendar days will be generated here -->
+                </div>
+                <div class="heatmap-legend">
+                    <span>Less</span>
+                    <div class="legend-gradient"></div>
+                    <span>More</span>
+                </div>
+            </section>
+
+            <!-- Middle Panel: Input -->
             <section class="panel input-panel">
                 <h2>Task Input</h2>
                 <div class="form-group">

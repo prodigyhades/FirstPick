@@ -1,6 +1,6 @@
 let taskList = [];
+let currentDate = new Date();
 
-// Initialize taskList from textarea if present
 document.addEventListener('DOMContentLoaded', () => {
     const inputElement = document.getElementById('task-input');
     if (inputElement && inputElement.value.trim()) {
@@ -11,7 +11,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // Initialize Edit Modal
     const modal = document.getElementById('edit-modal');
     const span = document.getElementsByClassName("close-modal")[0];
 
@@ -27,7 +26,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // Initialize Edit Sliders
     const editImportanceSlider = document.getElementById('edit-task-importance');
     const editHoursSlider = document.getElementById('edit-task-hours');
 
@@ -40,6 +38,20 @@ document.addEventListener('DOMContentLoaded', () => {
         updateSlider(editHoursSlider, 'edit-hours-val');
         editHoursSlider.addEventListener('input', () => updateSlider(editHoursSlider, 'edit-hours-val'));
     }
+
+    // Calendar Navigation
+    document.getElementById('prev-month').addEventListener('click', () => {
+        currentDate.setMonth(currentDate.getMonth() - 1);
+        renderCalendar();
+    });
+
+    document.getElementById('next-month').addEventListener('click', () => {
+        currentDate.setMonth(currentDate.getMonth() + 1);
+        renderCalendar();
+    });
+
+    // Initial Calendar Render
+    renderCalendar();
 });
 
 function updateSlider(slider, displayId) {
@@ -113,6 +125,8 @@ function addTask() {
 
     // Clear title input for convenience
     document.getElementById('new-task-title').value = '';
+
+    renderCalendar(); // Update heatmap
 }
 
 async function analyzeTasks() {
@@ -134,6 +148,9 @@ async function analyzeTasks() {
         let tasks;
         try {
             tasks = JSON.parse(tasksJson);
+            // Update global taskList to match analyzed tasks
+            taskList = tasks;
+            renderCalendar(); // Update heatmap with latest data
         } catch (e) {
             throw new Error("Invalid JSON format. Please check your syntax.");
         }
@@ -207,6 +224,7 @@ function deleteTask(id) {
         taskList = JSON.parse(inputElement.value);
         taskList = taskList.filter(t => t.id !== id);
         inputElement.value = JSON.stringify(taskList, null, 2);
+        renderCalendar(); // Update heatmap
         analyzeTasks(); // Re-analyze to update UI
     } catch (e) {
         console.error("Error deleting task", e);
@@ -271,6 +289,7 @@ function saveEditTask() {
 
             inputElement.value = JSON.stringify(taskList, null, 2);
             document.getElementById('edit-modal').style.display = "none";
+            renderCalendar(); // Update heatmap
             analyzeTasks(); // Re-analyze to update UI
         }
     } catch (e) {
@@ -292,4 +311,90 @@ function escapeHtml(text) {
         .replace(/>/g, "&gt;")
         .replace(/"/g, "&quot;")
         .replace(/'/g, "&#039;");
+}
+
+// --- Heatmap / Calendar Logic ---
+
+function renderCalendar() {
+    const year = currentDate.getFullYear();
+    const month = currentDate.getMonth();
+
+    // Update Header
+    const monthNames = ["January", "February", "March", "April", "May", "June",
+        "July", "August", "September", "October", "November", "December"
+    ];
+    document.getElementById('current-month-year').textContent = `${monthNames[month]} ${year}`;
+
+    const calendarGrid = document.getElementById('calendar-grid');
+    calendarGrid.innerHTML = '';
+
+    // Add Day Headers
+    const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+    days.forEach(day => {
+        const dayHeader = document.createElement('div');
+        dayHeader.className = 'calendar-day-header';
+        dayHeader.textContent = day;
+        calendarGrid.appendChild(dayHeader);
+    });
+
+    // Calculate days
+    const firstDay = new Date(year, month, 1).getDay();
+    const daysInMonth = new Date(year, month + 1, 0).getDate();
+
+    // Calculate Task Counts per Day
+    const taskCounts = {};
+    let maxTasks = 0;
+
+    taskList.forEach(task => {
+        if (task.due_date) {
+            const date = new Date(task.due_date);
+            // Check if task is in current month view (optional, but good for optimization)
+            // Actually we need exact date match string YYYY-MM-DD
+            const dateStr = task.due_date;
+            taskCounts[dateStr] = (taskCounts[dateStr] || 0) + 1;
+            if (taskCounts[dateStr] > maxTasks) {
+                maxTasks = taskCounts[dateStr];
+            }
+        }
+    });
+
+    // Empty cells before first day
+    for (let i = 0; i < firstDay; i++) {
+        const emptyCell = document.createElement('div');
+        emptyCell.className = 'calendar-day empty';
+        calendarGrid.appendChild(emptyCell);
+    }
+
+    // Days
+    const today = new Date();
+    for (let i = 1; i <= daysInMonth; i++) {
+        const dayCell = document.createElement('div');
+        dayCell.className = 'calendar-day';
+        dayCell.textContent = i;
+
+        // Construct date string YYYY-MM-DD for matching
+        // Note: Month is 0-indexed in JS Date, but 1-indexed in YYYY-MM-DD
+        const currentMonthStr = (month + 1).toString().padStart(2, '0');
+        const dayStr = i.toString().padStart(2, '0');
+        const dateString = `${year}-${currentMonthStr}-${dayStr}`;
+
+        // Highlight Today
+        if (year === today.getFullYear() && month === today.getMonth() && i === today.getDate()) {
+            dayCell.classList.add('today');
+        }
+
+        // Apply Heatmap Color
+        if (taskCounts[dateString]) {
+            const count = taskCounts[dateString];
+            const alpha = maxTasks > 0 ? (count / maxTasks) : 0;
+            // Using rgba(220, 53, 69, alpha) -> Red color
+            // Ensure a minimum visibility for 1 task
+            const adjustedAlpha = 0.2 + (alpha * 0.8);
+            dayCell.style.backgroundColor = `rgba(220, 53, 69, ${adjustedAlpha})`;
+            dayCell.style.color = adjustedAlpha > 0.5 ? 'white' : 'inherit';
+            dayCell.title = `${count} task${count > 1 ? 's' : ''} due`;
+        }
+
+        calendarGrid.appendChild(dayCell);
+    }
 }
