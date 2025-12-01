@@ -75,7 +75,7 @@ function updateSlider(slider, displayId) {
     const hue = ((100 - percentage) * 1.2).toFixed(0);
     const color = `hsl(${hue}, 100%, 50%)`;
 
-    slider.style.background = `linear-gradient(to right, ${color} 0%, ${color} ${percentage}%, #e2e8f0 ${percentage}%, #e2e8f0 100%)`;
+    slider.style.background = `linear-gradient(to right, ${color} 0%, ${color} ${percentage}%, #404040 ${percentage}%, #404040 100%)`;
 }
 
 function addTask() {
@@ -466,7 +466,7 @@ function renderCalendar() {
             const alpha = maxTasks > 0 ? (count / maxTasks) : 0;
             // Use brand color Red for heatmap
             const adjustedAlpha = 0.2 + (alpha * 0.8);
-            dayCell.style.backgroundColor = `rgba(239, 68, 68, ${adjustedAlpha})`; // A shade of red
+            dayCell.style.backgroundColor = `rgba(229, 9, 20, ${adjustedAlpha})`; // Netflix Red
             dayCell.style.color = adjustedAlpha > 0.5 ? 'white' : 'inherit';
             dayCell.title = `${count} task${count > 1 ? 's' : ''} due`;
         }
