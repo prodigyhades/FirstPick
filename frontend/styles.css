@@ -231,6 +231,7 @@ body {
 .gradient-text {
     background: var(--primary-gradient);
     -webkit-background-clip: text;
+    background-clip: text;
     -webkit-text-fill-color: transparent;
 }
 
@@ -488,73 +489,118 @@ input:focus + .input-icon, .input-wrapper:focus-within .input-icon {
     border-radius: 3px;
 }
 
-/* Result Cards */
-.task-card {
-    background: white;
-    border-radius: var(--radius-md);
-    padding: 1.25rem;
-    border: 1px solid var(--border-light);
-    box-shadow: var(--shadow-sm);
-    transition: all 0.2s;
-    position: relative;
-    overflow: hidden;
-    animation: slideIn 0.4s ease forwards;
-}
 
 @keyframes slideIn {
     from { opacity: 0; transform: translateY(20px); }
     to { opacity: 1; transform: translateY(0); }
 }
 
+/* --- Optimized Task Cards --- */
+
+.task-card {
+    background: white;
+    border-radius: var(--radius-md);
+    /* 1. Use Border-Left for the Priority Indicator (Guaranteed Visibility) */
+    border: 1px solid var(--border-light);
+    border-left: 6px solid #cbd5e1; /* Default Gray */
+    
+    padding: 1rem 1.25rem;
+    box-shadow: var(--shadow-sm);
+    
+    /* Animation settings */
+    transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+    position: relative;
+    overflow: hidden;
+    
+    /* Compact State Dimensions */
+    max-height: 80px; 
+    flex-shrink: 0;
+    cursor: default;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Priority Colors (Applied to the left border) */
+.task-card.high-priority { border-left-color: #ef4444; }
+.task-card.medium-priority { border-left-color: #f59e0b; }
+.task-card.low-priority { border-left-color: #10b981; }
+
+/* Expanded State (Hover) */
 .task-card:hover {
-    transform: translateY(-2px);
-    box-shadow: var(--shadow-md);
+    max-height: 400px; /* Open up to fit everything */
+    box-shadow: 0 12px 30px -10px rgba(0, 0, 0, 0.15);
+    transform: translateY(-2px) scale(1.01);
+    z-index: 10;
 }
 
-.task-card::before {
-    content: '';
-    position: absolute;
-    left: 0;
-    top: 0;
-    bottom: 0;
-    width: 6px;
-    background: #cbd5e1; /* Default */
-}
+/* --- Content Visibility Logic --- */
 
-.task-card.high-priority::before { background: #ef4444; }
-.task-card.medium-priority::before { background: #f59e0b; }
-.task-card.low-priority::before { background: #10b981; }
-
+/* 1. Title: Always Visible, Dark, and Bold */
 .task-card h3 {
-    font-size: 1.1rem;
+    margin: 0 0 0.25rem 0; /* Tight spacing */
+    font-size: 1rem;
     font-weight: 700;
-    margin-bottom: 0.5rem;
-    padding-left: 10px;
+    color: var(--text-main); /* Force Dark Color */
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: block;
+    width: 100%;
 }
 
+/* 2. Date: Always Visible */
 .task-meta {
     display: flex;
     justify-content: space-between;
+    align-items: center;
     font-size: 0.8rem;
     color: var(--text-muted);
-    margin-bottom: 0.75rem;
-    padding-left: 10px;
+    margin-bottom: 0; /* No margin in compact mode */
+    transition: margin 0.3s ease;
 }
 
-.task-explanation {
-    background: #f8fafc;
-    padding: 0.75rem;
-    border-radius: var(--radius-sm);
-    font-size: 0.85rem;
-    color: #475569;
-    font-style: italic;
-    margin-bottom: 0.75rem;
+.task-card:hover .task-meta {
+    margin-bottom: 1rem; /* Add breathing room when expanded */
 }
 
+/* 3. Score: Hidden in Compact, Visible on Hover */
+.task-meta span:first-child {
+    opacity: 0;
+    max-width: 0;
+    overflow: hidden;
+    transition: all 0.3s ease;
+    white-space: nowrap;
+}
+
+.task-card:hover .task-meta span:first-child {
+    opacity: 1;
+    max-width: 150px;
+    margin-right: 1rem;
+}
+
+/* 4. Explanation & Actions: Hidden in Compact, Slide In on Hover */
+.task-explanation,
 .task-actions {
-    display: flex;
-    gap: 0.5rem;
-    justify-content: flex-end;
+    opacity: 0;
+    max-height: 0;
+    margin: 0;
+    transform: translateY(10px);
+    transition: all 0.3s ease;
+}
+
+.task-card:hover .task-explanation {
+    opacity: 1;
+    max-height: 200px; /* Allow text to wrap */
+    margin-bottom: 1rem;
+    transform: translateY(0);
+    transition-delay: 0.1s;
+}
+
+.task-card:hover .task-actions {
+    opacity: 1;
+    max-height: 50px;
+    transform: translateY(0);
+    transition-delay: 0.15s;
 }
 
 .btn-action {

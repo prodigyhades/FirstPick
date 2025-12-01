@@ -313,8 +313,8 @@ function saveEditTask() {
 }
 
 function getPriorityClass(score) {
-    if (score >= 1.5) return 'high-priority';
-    if (score >= 0.8) return 'medium-priority';
+    if (score >= 0.75) return 'high-priority';
+    if (score >= 0.4) return 'medium-priority';
     return 'low-priority';
 }
 
