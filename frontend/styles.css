@@ -241,39 +241,13 @@ body {
     font-size: 0.65rem;
     font-weight: 700;
     color: var(--text-muted);
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-}
-
-/* --- Middle Column (Input) --- */
-.hero-card {
-    flex: 1;
-    justify-content: flex-start; /* Align to top */
-    gap: 2rem;
-    padding: 3rem;
-    background: linear-gradient(180deg, rgba(0,0,0,0) 0%, rgba(0,0,0,0.4) 100%), var(--card-bg);
-    border: 1px solid var(--border-light);
-    overflow-y: auto; /* Enable scrolling */
-}
-
-/* Custom Scrollbar for Hero Card */
-.hero-card::-webkit-scrollbar {
-    width: 6px;
-}
-.hero-card::-webkit-scrollbar-track {
-    background: transparent;
-}
-.hero-card::-webkit-scrollbar-thumb {
-    background: #404040;
-    border-radius: 3px;
-}
-.hero-card::-webkit-scrollbar-thumb:hover {
-    background: #666;
 }
 
 .hero-header {
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
     gap: 1rem;
     margin-bottom: 1rem;
     border-bottom: 1px solid var(--border-light);
@@ -281,15 +255,16 @@ body {
 }
 
 .hero-header h2 {
-    font-size: 2.5rem;
+    font-size: 1.75rem;
     font-weight: 800;
     color: var(--text-main);
     letter-spacing: -0.02em;
+    margin: 0;
 }
 
 /* Strategy Selector - Premium Dropdown */
 .strategy-selector-wrapper {
-    width: 100%;
+    width: auto;
 }
 
 .select-container {
@@ -516,34 +491,6 @@ input:focus + .input-icon, .input-wrapper:focus-within .input-icon {
     text-align: center;
     min-height: 1.25rem;
     font-weight: 600;
-}
-
-/* --- Right Column (Results) --- */
-.col-results {
-    overflow: hidden;
-}
-
-.results-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 0 0.5rem;
-    margin-bottom: 0.5rem;
-}
-
-.results-header h2 {
-    font-size: 1.25rem;
-    font-weight: 700;
-    color: var(--text-main);
-}
-
-.badge {
-    background: var(--primary-red);
-    color: white;
-    padding: 2px 8px;
-    border-radius: 2px;
-    font-size: 0.75rem;
-    font-weight: 700;
 }
 
 .results-scroll-area {
