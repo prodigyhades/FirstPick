@@ -210,11 +210,10 @@ body {
     border-radius: var(--radius-md);
     padding: 1rem;
     display: flex;
-    flex-direction: column;
     align-items: center;
     justify-content: center;
-    box-shadow: var(--shadow-sm);
-    transition: transform 0.2s;
+    gap: 0.5rem;
+    transition: all 0.2s;
 }
 
 .stat-item:hover {
@@ -245,9 +244,9 @@ body {
 /* --- Middle Column (Input) --- */
 .hero-card {
     flex: 1;
-    justify-content: center; 
+    justify-content: center;
     gap: 1.5rem;
-    padding: 3rem; 
+    padding: 3rem;
 }
 
 .hero-header {
@@ -266,36 +265,64 @@ body {
 /* Strategy Selector */
 .select-container {
     position: relative;
-    width: 200px;
+    width: 220px;
 }
 
 .select-icon {
     position: absolute;
-    left: 12px;
+    left: 16px;
     top: 50%;
     transform: translateY(-50%);
     color: #6366f1;
     pointer-events: none;
+    font-size: 1.1rem;
+    z-index: 2;
+}
+
+/* Custom Arrow */
+.select-container::after {
+    content: '\ea4e'; /* Remix Icon 'arrow-down-s-line' */
+    font-family: 'remixicon';
+    position: absolute;
+    right: 16px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #64748b;
+    pointer-events: none;
+    transition: all 0.2s;
+}
+
+.select-container:hover::after {
+    color: #6366f1;
+    transform: translateY(-50%) rotate(180deg);
 }
 
 select {
     width: 100%;
-    padding: 10px 10px 10px 36px;
-    border-radius: var(--radius-sm);
-    border: 1px solid var(--border-light);
-    background: white;
+    padding: 12px 40px 12px 44px; /* Space for icon & arrow */
+    border-radius: var(--radius-md);
+    border: 2px solid #f1f5f9;
+    background: #f8fafc;
     font-family: inherit;
-    font-weight: 500;
+    font-weight: 600;
     color: var(--text-main);
     cursor: pointer;
-    appearance: none;
-    transition: all 0.2s;
+    appearance: none; /* Remove default arrow */
+    transition: all 0.2s ease;
+    box-shadow: var(--shadow-sm);
+}
+
+select:hover {
+    background: white;
+    border-color: #e2e8f0;
+    box-shadow: var(--shadow-md);
 }
 
 select:focus {
     outline: none;
+    background: white;
     border-color: #6366f1;
-    box-shadow: 0 0 0 3px var(--accent-glow);
+    box-shadow: 0 0 0 4px var(--accent-glow);
 }
 
 /* Inputs */
