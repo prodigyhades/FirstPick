@@ -493,6 +493,34 @@ input:focus + .input-icon, .input-wrapper:focus-within .input-icon {
     font-weight: 600;
 }
 
+/* --- Right Column (Results) --- */
+.col-results {
+    overflow: hidden;
+}
+
+.results-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 0.5rem;
+    margin-bottom: 0.5rem;
+}
+
+.results-header h2 {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--text-main);
+}
+
+.badge {
+    background: var(--primary-red);
+    color: white;
+    padding: 2px 8px;
+    border-radius: 2px;
+    font-size: 0.75rem;
+    font-weight: 700;
+}
+
 .results-scroll-area {
     flex: 1;
     overflow-y: auto;
