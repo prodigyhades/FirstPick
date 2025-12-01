@@ -1,4 +1,7 @@
 :root {
+    /* Scaling */
+    font-size: 85%;
+
     /* Brand Colors */
     --primary-gradient: linear-gradient(135deg, #6366f1 0%, #3b82f6 100%);
     --accent-glow: rgba(99, 102, 241, 0.4);
@@ -51,7 +54,7 @@ body {
     gap: 1.5rem;
     display: grid;
     grid-template-columns: 25% 40% 35%; /* 3 Columns */
-    max-width: 1800px;
+    max-width: 1600px;
     margin: 0 auto;
 }
 
