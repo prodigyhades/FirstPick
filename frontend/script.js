@@ -207,21 +207,27 @@ function renderResults(tasks) {
     tasks.forEach((task, index) => {
         const card = document.createElement('div');
         card.className = `task-card ${getPriorityClass(task.score)}`;
-        // Stagger animation
+        // Stagger animation for a premium feel
         card.style.animationDelay = `${index * 0.1}s`;
 
         const scoreDisplay = (task.score).toFixed(2);
         const dueDateDisplay = task.due_date ? task.due_date : 'No Date';
 
+        // NEW HTML STRUCTURE (Matches the new CSS)
         card.innerHTML = `
-            <h3>${escapeHtml(task.title)}</h3>
+            <div class="task-header-row">
+                <h3>${escapeHtml(task.title)}</h3>
+                <span class="task-date"><i class="ri-calendar-line"></i> ${dueDateDisplay}</span>
+            </div>
+            
             <div class="task-meta">
                 <span><i class="ri-bar-chart-fill"></i> Score: <strong>${scoreDisplay}</strong></span>
-                <span><i class="ri-calendar-line"></i> ${dueDateDisplay}</span>
             </div>
+
             <div class="task-explanation">
                 ${escapeHtml(task.explanation)}
             </div>
+            
             <div class="task-actions">
                 <button class="btn-action btn-complete" onclick="completeTask(${task.id})"><i class="ri-check-line"></i> Done</button>
                 <button class="btn-action btn-edit" onclick="openEditModal(${task.id})"><i class="ri-pencil-line"></i> Edit</button>

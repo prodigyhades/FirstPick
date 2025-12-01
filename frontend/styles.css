@@ -531,39 +531,72 @@ input:focus + .input-icon, .input-wrapper:focus-within .input-icon {
     box-shadow: 0 12px 30px -10px rgba(0, 0, 0, 0.15);
     transform: translateY(-2px) scale(1.01);
     z-index: 10;
+    /* We don't change border color here to keep the priority indicator visible */
 }
 
 /* --- Content Visibility Logic --- */
 
-/* 1. Title: Always Visible, Dark, and Bold */
-.task-card h3 {
-    margin: 0 0 0.25rem 0; /* Tight spacing */
-    font-size: 1rem;
-    font-weight: 700;
-    color: var(--text-main); /* Force Dark Color */
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    display: block;
-    width: 100%;
-}
-
-/* 2. Date: Always Visible */
-.task-meta {
+/* 1. Create a Header Row Container */
+.task-header-row {
     display: flex;
     justify-content: space-between;
+    align-items: flex-start; /* Align to top */
+    gap: 1rem; /* Space between title and date */
+    width: 100%;
+    margin-bottom: 0.25rem;
+}
+
+/* 2. Title Styling */
+.task-card h3 {
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--text-main);
+    line-height: 1.4;
+    margin: 0;
+    
+    /* Handle long text gracefully */
+    display: -webkit-box;
+    -webkit-line-clamp: 1; /* Default: 1 line in compact mode */
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    flex: 1; /* Take up remaining space */
+}
+
+/* Allow title to wrap on hover */
+.task-card:hover h3 {
+    -webkit-line-clamp: 3; /* Expand to 3 lines if needed */
+}
+
+/* 3. Date Styling (Fixed on Right) */
+.task-date {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    white-space: nowrap; /* Never wrap the date */
+    flex-shrink: 0; /* Never shrink the date */
+    padding-top: 2px; /* Visual alignment with text */
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+/* 4. Meta Row (Score Only now) */
+.task-meta {
+    display: flex;
     align-items: center;
     font-size: 0.8rem;
     color: var(--text-muted);
-    margin-bottom: 0; /* No margin in compact mode */
+    margin-bottom: 0;
     transition: margin 0.3s ease;
+    height: 0; /* Hide by default */
+    overflow: hidden;
 }
 
 .task-card:hover .task-meta {
-    margin-bottom: 1rem; /* Add breathing room when expanded */
+    height: auto; /* Reveal on hover */
+    margin-bottom: 1rem;
 }
 
-/* 3. Score: Hidden in Compact, Visible on Hover */
+/* 5. Score: Hidden in Compact, Visible on Hover */
 .task-meta span:first-child {
     opacity: 0;
     max-width: 0;
@@ -578,7 +611,7 @@ input:focus + .input-icon, .input-wrapper:focus-within .input-icon {
     margin-right: 1rem;
 }
 
-/* 4. Explanation & Actions: Hidden in Compact, Slide In on Hover */
+/* 6. Explanation & Actions: Hidden in Compact, Slide In on Hover */
 .task-explanation,
 .task-actions {
     opacity: 0;
