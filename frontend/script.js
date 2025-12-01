@@ -464,9 +464,9 @@ function renderCalendar() {
         if (taskCounts[dateString]) {
             const count = taskCounts[dateString];
             const alpha = maxTasks > 0 ? (count / maxTasks) : 0;
-            // Use brand color (Indigo) for heatmap
+            // Use brand color Red for heatmap
             const adjustedAlpha = 0.2 + (alpha * 0.8);
-            dayCell.style.backgroundColor = `rgba(99, 102, 241, ${adjustedAlpha})`;
+            dayCell.style.backgroundColor = `rgba(239, 68, 68, ${adjustedAlpha})`; // A shade of red
             dayCell.style.color = adjustedAlpha > 0.5 ? 'white' : 'inherit';
             dayCell.title = `${count} task${count > 1 ? 's' : ''} due`;
         }
