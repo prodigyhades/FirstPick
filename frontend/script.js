@@ -2,6 +2,7 @@ let taskList = [];
 let currentDate = new Date();
 
 document.addEventListener('DOMContentLoaded', () => {
+    // Initialize from hidden textarea if present
     const inputElement = document.getElementById('task-input');
     if (inputElement && inputElement.value.trim()) {
         try {
@@ -11,11 +12,12 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
+    // Modal Logic
     const modal = document.getElementById('edit-modal');
-    const span = document.getElementsByClassName("close-modal")[0];
+    const closeBtn = document.querySelector(".close-modal");
 
-    if (span) {
-        span.onclick = function () {
+    if (closeBtn) {
+        closeBtn.onclick = function () {
             modal.style.display = "none";
         }
     }
@@ -26,6 +28,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
+    // Sliders
     const editImportanceSlider = document.getElementById('edit-task-importance');
     const editHoursSlider = document.getElementById('edit-task-hours');
 
@@ -50,8 +53,9 @@ document.addEventListener('DOMContentLoaded', () => {
         renderCalendar();
     });
 
-    // Initial Calendar Render
+    // Initial Renders
     renderCalendar();
+    updateStats();
 });
 
 function updateSlider(slider, displayId) {
@@ -68,10 +72,10 @@ function updateSlider(slider, displayId) {
 
     // Update background gradient (Green -> Red)
     // 0% = Green (120 hue), 100% = Red (0 hue)
-    const hue = ((100 - percentage) * 1.2).toFixed(0); // Map 0-100 to 120-0
+    const hue = ((100 - percentage) * 1.2).toFixed(0);
     const color = `hsl(${hue}, 100%, 50%)`;
 
-    slider.style.background = `linear-gradient(to right, ${color} 0%, ${color} ${percentage}%, #d3d3d3 ${percentage}%, #d3d3d3 100%)`;
+    slider.style.background = `linear-gradient(to right, ${color} 0%, ${color} ${percentage}%, #e2e8f0 ${percentage}%, #e2e8f0 100%)`;
 }
 
 function addTask() {
@@ -82,7 +86,6 @@ function addTask() {
     const depsStr = document.getElementById('new-task-deps').value;
     const errorMessage = document.getElementById('error-message');
 
-    // Clear error message
     if (errorMessage) errorMessage.textContent = '';
 
     if (!title) {
@@ -107,7 +110,6 @@ function addTask() {
         console.warn("Invalid JSON in textarea, overwriting with current list + new task");
     }
 
-    // Simple ID generation
     const newId = taskList.length > 0 ? Math.max(...taskList.map(t => t.id || 0)) + 1 : 1;
 
     const newTask = {
@@ -123,10 +125,22 @@ function addTask() {
 
     inputElement.value = JSON.stringify(taskList, null, 2);
 
-    // Clear title input for convenience
+    // Clear inputs
     document.getElementById('new-task-title').value = '';
+    document.getElementById('new-task-due').value = '';
+    document.getElementById('new-task-importance').value = '';
+    document.getElementById('new-task-hours').value = '';
+    document.getElementById('new-task-deps').value = '';
 
-    renderCalendar(); // Update heatmap
+    renderCalendar();
+    updateStats();
+
+    // Animate button
+    const btn = document.querySelector('.btn-primary');
+    btn.innerHTML = '<i class="ri-check-line"></i> Added!';
+    setTimeout(() => {
+        btn.innerHTML = '<i class="ri-add-line"></i> Add to Queue';
+    }, 1500);
 }
 
 async function analyzeTasks() {
@@ -134,9 +148,9 @@ async function analyzeTasks() {
     const strategyElement = document.getElementById('strategy-select');
     const resultsContainer = document.getElementById('results-container');
     const errorMessage = document.getElementById('error-message');
+    const badge = document.getElementById('task-count-badge');
 
-    // Clear previous results and errors
-    resultsContainer.innerHTML = '<div class="placeholder-text">Analyzing...</div>';
+    resultsContainer.innerHTML = '<div class="empty-state"><i class="ri-loader-4-line ri-spin"></i><p>Analyzing...</p></div>';
     errorMessage.textContent = '';
 
     try {
@@ -148,31 +162,21 @@ async function analyzeTasks() {
         let tasks;
         try {
             tasks = JSON.parse(tasksJson);
-
-            // Ensure all tasks have an ID
+            // Ensure IDs
             tasks = tasks.map((t, index) => {
-                if (!t.id) {
-                    return { ...t, id: Date.now() + index };
-                }
+                if (!t.id) return { ...t, id: Date.now() + index };
                 return t;
             });
-
-            // Update global taskList to match analyzed tasks
             taskList = tasks;
-
-            // Update the input field with the new JSON containing IDs
             inputElement.value = JSON.stringify(taskList, null, 2);
-
-            renderCalendar(); // Update heatmap with latest data
-        } catch (e) {
-        }
+            renderCalendar();
+            updateStats();
+        } catch (e) { }
 
         const strategy = strategyElement ? strategyElement.value : 'smart_balance';
         const response = await fetch(`http://127.0.0.1:8000/api/tasks/analyze/?strategy=${strategy}`, {
             method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
+            headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(taskList)
         });
 
@@ -183,9 +187,11 @@ async function analyzeTasks() {
         const data = await response.json();
         renderResults(data.tasks);
 
+        if (badge) badge.textContent = data.tasks.length;
+
     } catch (error) {
         errorMessage.textContent = error.message;
-        resultsContainer.innerHTML = '<div class="placeholder-text">Analysis failed.</div>';
+        resultsContainer.innerHTML = '<div class="empty-state"><i class="ri-error-warning-line"></i><p>Analysis failed.</p></div>';
     }
 }
 
@@ -194,13 +200,15 @@ function renderResults(tasks) {
     resultsContainer.innerHTML = '';
 
     if (tasks.length === 0) {
-        resultsContainer.innerHTML = '<div class="placeholder-text">All caught up! Add a task to get started.</div>';
+        resultsContainer.innerHTML = '<div class="empty-state"><i class="ri-check-double-line"></i><p>All caught up!</p></div>';
         return;
     }
 
-    tasks.forEach(task => {
+    tasks.forEach((task, index) => {
         const card = document.createElement('div');
         card.className = `task-card ${getPriorityClass(task.score)}`;
+        // Stagger animation
+        card.style.animationDelay = `${index * 0.1}s`;
 
         const scoreDisplay = (task.score).toFixed(2);
         const dueDateDisplay = task.due_date ? task.due_date : 'No Date';
@@ -208,16 +216,16 @@ function renderResults(tasks) {
         card.innerHTML = `
             <h3>${escapeHtml(task.title)}</h3>
             <div class="task-meta">
-                <span>Score: <strong>${scoreDisplay}</strong></span>
-                <span>Due: ${dueDateDisplay}</span>
+                <span><i class="ri-bar-chart-fill"></i> Score: <strong>${scoreDisplay}</strong></span>
+                <span><i class="ri-calendar-line"></i> ${dueDateDisplay}</span>
             </div>
             <div class="task-explanation">
                 ${escapeHtml(task.explanation)}
             </div>
             <div class="task-actions">
-                <button class="btn-action btn-complete" onclick="completeTask(${task.id})">Completed</button>
-                <button class="btn-action btn-edit" onclick="openEditModal(${task.id})">Edit</button>
-                <button class="btn-action btn-delete" onclick="deleteTask(${task.id})">Delete</button>
+                <button class="btn-action btn-complete" onclick="completeTask(${task.id})"><i class="ri-check-line"></i> Done</button>
+                <button class="btn-action btn-edit" onclick="openEditModal(${task.id})"><i class="ri-pencil-line"></i> Edit</button>
+                <button class="btn-action btn-delete" onclick="deleteTask(${task.id})"><i class="ri-delete-bin-line"></i></button>
             </div>
         `;
 
@@ -231,15 +239,15 @@ function deleteTask(id) {
         taskList = JSON.parse(inputElement.value);
         taskList = taskList.filter(t => t.id !== id);
         inputElement.value = JSON.stringify(taskList, null, 2);
-        renderCalendar(); // Update heatmap
-        analyzeTasks(); // Re-analyze to update UI
+        renderCalendar();
+        updateStats();
+        analyzeTasks();
     } catch (e) {
         console.error("Error deleting task", e);
     }
 }
 
 function completeTask(id) {
-    // For now, completing a task just removes it, same as delete
     deleteTask(id);
 }
 
@@ -257,11 +265,10 @@ function openEditModal(id) {
         document.getElementById('edit-task-hours').value = task.estimated_hours;
         document.getElementById('edit-task-deps').value = (task.dependencies || []).join(', ');
 
-        // Update sliders visual state
         updateSlider(document.getElementById('edit-task-importance'), 'edit-importance-val');
         updateSlider(document.getElementById('edit-task-hours'), 'edit-hours-val');
 
-        document.getElementById('edit-modal').style.display = "block";
+        document.getElementById('edit-modal').style.display = "flex"; // Flex for centering
     } catch (e) {
         console.error("Error opening edit modal", e);
     }
@@ -296,8 +303,9 @@ function saveEditTask() {
 
             inputElement.value = JSON.stringify(taskList, null, 2);
             document.getElementById('edit-modal').style.display = "none";
-            renderCalendar(); // Update heatmap
-            analyzeTasks(); // Re-analyze to update UI
+            renderCalendar();
+            updateStats();
+            analyzeTasks();
         }
     } catch (e) {
         console.error("Error saving edited task", e);
@@ -326,30 +334,83 @@ function toggleJsonVisibility() {
 
     if (container.classList.contains('hidden')) {
         container.classList.remove('hidden');
-        btn.textContent = "Hide Advanced JSON Data";
+        btn.innerHTML = '<i class="ri-code-s-slash-line"></i> Hide JSON';
     } else {
         container.classList.add('hidden');
-        btn.textContent = "Show Advanced JSON Data";
+        btn.innerHTML = '<i class="ri-code-s-slash-line"></i> Advanced JSON';
     }
 }
 
-// --- Heatmap / Calendar Logic ---
+// --- Live Stats Widget Logic ---
+function updateStats() {
+    const today = new Date();
+    const currentMonth = today.getMonth();
+    const currentYear = today.getFullYear();
+    const todayStr = today.toISOString().split('T')[0];
 
+    let countToday = 0;
+    let countMonth = 0;
+    let countYear = 0;
+
+    taskList.forEach(task => {
+        if (task.due_date) {
+            const taskDate = new Date(task.due_date);
+            const taskDateStr = task.due_date; // Assuming YYYY-MM-DD format
+
+            if (taskDateStr === todayStr) {
+                countToday++;
+            }
+            if (taskDate.getMonth() === currentMonth && taskDate.getFullYear() === currentYear) {
+                countMonth++;
+            }
+            if (taskDate.getFullYear() === currentYear) {
+                countYear++;
+            }
+        }
+    });
+
+    animateValue("stat-today", parseInt(document.getElementById("stat-today").textContent), countToday, 1000);
+    animateValue("stat-month", parseInt(document.getElementById("stat-month").textContent), countMonth, 1000);
+    animateValue("stat-year", parseInt(document.getElementById("stat-year").textContent), countYear, 1000);
+}
+
+function animateValue(id, start, end, duration) {
+    if (start === end) return;
+    const range = end - start;
+    let current = start;
+    const increment = end > start ? 1 : -1;
+    const stepTime = Math.abs(Math.floor(duration / range));
+    const obj = document.getElementById(id);
+
+    // If stepTime is too small (large range), just jump to end to avoid freezing
+    if (stepTime < 10) {
+        obj.textContent = end;
+        return;
+    }
+
+    const timer = setInterval(function () {
+        current += increment;
+        obj.textContent = current;
+        if (current == end) {
+            clearInterval(timer);
+        }
+    }, stepTime);
+}
+
+// --- Heatmap / Calendar Logic ---
 function renderCalendar() {
     const year = currentDate.getFullYear();
     const month = currentDate.getMonth();
 
-    // Update Header
-    const monthNames = ["January", "February", "March", "April", "May", "June",
-        "July", "August", "September", "October", "November", "December"
+    const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun",
+        "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
     ];
     document.getElementById('current-month-year').textContent = `${monthNames[month]} ${year}`;
 
     const calendarGrid = document.getElementById('calendar-grid');
     calendarGrid.innerHTML = '';
 
-    // Add Day Headers
-    const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+    const days = ['S', 'M', 'T', 'W', 'T', 'F', 'S'];
     days.forEach(day => {
         const dayHeader = document.createElement('div');
         dayHeader.className = 'calendar-day-header';
@@ -357,19 +418,14 @@ function renderCalendar() {
         calendarGrid.appendChild(dayHeader);
     });
 
-    // Calculate days
     const firstDay = new Date(year, month, 1).getDay();
     const daysInMonth = new Date(year, month + 1, 0).getDate();
 
-    // Calculate Task Counts per Day
     const taskCounts = {};
     let maxTasks = 0;
 
     taskList.forEach(task => {
         if (task.due_date) {
-            const date = new Date(task.due_date);
-            // Check if task is in current month view (optional, but good for optimization)
-            // Actually we need exact date match string YYYY-MM-DD
             const dateStr = task.due_date;
             taskCounts[dateStr] = (taskCounts[dateStr] || 0) + 1;
             if (taskCounts[dateStr] > maxTasks) {
@@ -378,39 +434,33 @@ function renderCalendar() {
         }
     });
 
-    // Empty cells before first day
     for (let i = 0; i < firstDay; i++) {
         const emptyCell = document.createElement('div');
         emptyCell.className = 'calendar-day empty';
+        emptyCell.style.background = 'transparent';
         calendarGrid.appendChild(emptyCell);
     }
 
-    // Days
     const today = new Date();
     for (let i = 1; i <= daysInMonth; i++) {
         const dayCell = document.createElement('div');
         dayCell.className = 'calendar-day';
         dayCell.textContent = i;
 
-        // Construct date string YYYY-MM-DD for matching
-        // Note: Month is 0-indexed in JS Date, but 1-indexed in YYYY-MM-DD
         const currentMonthStr = (month + 1).toString().padStart(2, '0');
         const dayStr = i.toString().padStart(2, '0');
         const dateString = `${year}-${currentMonthStr}-${dayStr}`;
 
-        // Highlight Today
         if (year === today.getFullYear() && month === today.getMonth() && i === today.getDate()) {
             dayCell.classList.add('today');
         }
 
-        // Apply Heatmap Color
         if (taskCounts[dateString]) {
             const count = taskCounts[dateString];
             const alpha = maxTasks > 0 ? (count / maxTasks) : 0;
-            // Using rgba(220, 53, 69, alpha) -> Red color
-            // Ensure a minimum visibility for 1 task
+            // Use brand color (Indigo) for heatmap
             const adjustedAlpha = 0.2 + (alpha * 0.8);
-            dayCell.style.backgroundColor = `rgba(220, 53, 69, ${adjustedAlpha})`;
+            dayCell.style.backgroundColor = `rgba(99, 102, 241, ${adjustedAlpha})`;
             dayCell.style.color = adjustedAlpha > 0.5 ? 'white' : 'inherit';
             dayCell.title = `${count} task${count > 1 ? 's' : ''} due`;
         }
