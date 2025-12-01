@@ -56,7 +56,7 @@ body {
     padding: 2rem;
     gap: 1.5rem;
     display: grid;
-    grid-template-columns: 22% 48% 30%; /* Adjusted based on importance */
+    grid-template-columns: 22fr 46fr 32fr; /* Adjusted to fr units to prevent overflow */
     grid-template-rows: minmax(0, 1fr); /* Constrain row height to fit container */
     max-width: 1800px;
     margin: 0 auto;
