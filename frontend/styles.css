@@ -595,6 +595,7 @@ input:focus + .input-icon, .input-wrapper:focus-within .input-icon {
     margin: 0;
     display: -webkit-box;
     -webkit-line-clamp: 1;
+    line-clamp: 1;
     -webkit-box-orient: vertical;
     overflow: hidden;
     flex: 1;
@@ -602,6 +603,7 @@ input:focus + .input-icon, .input-wrapper:focus-within .input-icon {
 
 .task-card:hover h3 {
     -webkit-line-clamp: 3;
+    line-clamp: 3;
 }
 
 .task-date {
