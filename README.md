@@ -100,7 +100,7 @@ With more time, the following features would be prioritized:
 
 **1. Clone the repository**
 ```bash
-git clone <repository_url>
+git clone https://github.com/prodigyhades/FirstPick/
 cd Smart_Task_Analyzer
 ```
 
