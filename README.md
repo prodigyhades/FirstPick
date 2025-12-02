@@ -131,3 +131,10 @@ python manage.py runserver
 
 **6. Launch Application**
 Open `frontend/index.html` in your web browser.
+
+**7. Run Unit Tests**
+To verify the application logic (scoring, cycle detection, etc.), run the test suite:
+```bash
+# Ensure you are in the backend directory
+python manage.py test
+```
